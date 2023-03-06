@@ -917,7 +917,6 @@ namespace Monitor
             this.comboBox_ConnectionNumber.Name = "comboBox_ConnectionNumber";
             this.comboBox_ConnectionNumber.Size = new System.Drawing.Size(156, 26);
             this.comboBox_ConnectionNumber.TabIndex = 2;
-            this.comboBox_ConnectionNumber.SelectedIndexChanged += new System.EventHandler(this.ComboBox1_SelectedIndexChanged);
             // 
             // button1
             // 
@@ -994,7 +993,6 @@ namespace Monitor
             this.checkBox_EchoResponse.TabIndex = 10;
             this.checkBox_EchoResponse.Text = "Send ACK Back";
             this.checkBox_EchoResponse.UseVisualStyleBackColor = true;
-            this.checkBox_EchoResponse.CheckedChanged += new System.EventHandler(this.CheckBox_EchoResponse_CheckedChanged);
             // 
             // groupBox3
             // 
@@ -1075,7 +1073,6 @@ namespace Monitor
             this.TextBox_Server.Size = new System.Drawing.Size(845, 535);
             this.TextBox_Server.TabIndex = 0;
             this.TextBox_Server.Text = "";
-            this.TextBox_Server.TextChanged += new System.EventHandler(this.RichTextBox1_TextChanged);
             // 
             // checkBox_RecordGeneral
             // 
@@ -2481,7 +2478,6 @@ namespace Monitor
             this.button13.TabIndex = 49;
             this.button13.Text = "RF Pairing";
             this.button13.UseVisualStyleBackColor = true;
-            this.button13.Click += new System.EventHandler(this.Button13_Click);
             // 
             // groupBox22
             // 
@@ -2510,7 +2506,6 @@ namespace Monitor
             this.button19.TabIndex = 63;
             this.button19.Text = "Odometer Config";
             this.button19.UseVisualStyleBackColor = true;
-            this.button19.Click += new System.EventHandler(this.Button19_Click);
             // 
             // groupBox28
             // 
@@ -2557,7 +2552,6 @@ namespace Monitor
             this.button25.TabIndex = 44;
             this.button25.Text = "Config Modem";
             this.button25.UseVisualStyleBackColor = true;
-            this.button25.Click += new System.EventHandler(this.Button25_Click);
             // 
             // textBox_ModemPrimeryPort
             // 
@@ -2604,7 +2598,6 @@ namespace Monitor
             this.button27.TabIndex = 44;
             this.button27.Text = "Config Forgin Net";
             this.button27.UseVisualStyleBackColor = true;
-            this.button27.Click += new System.EventHandler(this.Button27_Click);
             // 
             // textBox_ForginAcessPoint
             // 
@@ -2666,7 +2659,6 @@ namespace Monitor
             this.button26.TabIndex = 44;
             this.button26.Text = "Config Home Net";
             this.button26.UseVisualStyleBackColor = true;
-            this.button26.Click += new System.EventHandler(this.Button26_Click);
             // 
             // textBox_HomeAcessPoint
             // 
@@ -2727,7 +2719,6 @@ namespace Monitor
             this.button24.TabIndex = 70;
             this.button24.Text = "Duration sleep";
             this.button24.UseVisualStyleBackColor = true;
-            this.button24.Click += new System.EventHandler(this.Button24_Click);
             // 
             // groupBox26
             // 
@@ -2756,7 +2747,6 @@ namespace Monitor
             this.button23.TabIndex = 70;
             this.button23.Text = "Set Duration";
             this.button23.UseVisualStyleBackColor = true;
-            this.button23.Click += new System.EventHandler(this.Button23_Click);
             // 
             // groupBox25
             // 
@@ -2801,7 +2791,6 @@ namespace Monitor
             this.button22.TabIndex = 65;
             this.button22.Text = "Speed Limit Alert";
             this.button22.UseVisualStyleBackColor = true;
-            this.button22.Click += new System.EventHandler(this.Button22_Click);
             // 
             // groupBox24
             // 
@@ -2836,7 +2825,6 @@ namespace Monitor
             this.button21.TabIndex = 64;
             this.button21.Text = "Dispatch Speed";
             this.button21.UseVisualStyleBackColor = true;
-            this.button21.Click += new System.EventHandler(this.Button21_Click);
             // 
             // groupBox23
             // 
@@ -2871,7 +2859,6 @@ namespace Monitor
             this.button20.TabIndex = 64;
             this.button20.Text = "Kill Engine";
             this.button20.UseVisualStyleBackColor = true;
-            this.button20.Click += new System.EventHandler(this.Button20_Click);
             // 
             // groupBox21
             // 
@@ -2914,7 +2901,6 @@ namespace Monitor
             this.button18.TabIndex = 61;
             this.button18.Text = "Tilt/Tow Sensitivity";
             this.button18.UseVisualStyleBackColor = true;
-            this.button18.Click += new System.EventHandler(this.Button18_Click);
             // 
             // groupBox20
             // 
@@ -2957,7 +2943,6 @@ namespace Monitor
             this.button17.TabIndex = 61;
             this.button17.Text = "Hit Sensitivity";
             this.button17.UseVisualStyleBackColor = true;
-            this.button17.Click += new System.EventHandler(this.Button17_Click);
             // 
             // groupBox19
             // 
@@ -3008,7 +2993,6 @@ namespace Monitor
             this.button16.TabIndex = 42;
             this.button16.Text = "Config Shock";
             this.button16.UseVisualStyleBackColor = true;
-            this.button16.Click += new System.EventHandler(this.Button16_Click);
             // 
             // groupBox18
             // 
@@ -3067,7 +3051,6 @@ namespace Monitor
             this.button15.TabIndex = 42;
             this.button15.Text = "Config Tilt";
             this.button15.UseVisualStyleBackColor = true;
-            this.button15.Click += new System.EventHandler(this.Button15_Click);
             // 
             // groupBox17
             // 
@@ -3112,7 +3095,6 @@ namespace Monitor
             this.button14.TabIndex = 42;
             this.button14.Text = "Config Tow";
             this.button14.UseVisualStyleBackColor = true;
-            this.button14.Click += new System.EventHandler(this.Button14_Click);
             // 
             // groupBox11
             // 
@@ -3149,7 +3131,6 @@ namespace Monitor
             this.button12.TabIndex = 48;
             this.button12.Text = "Set Sleep Policy";
             this.button12.UseVisualStyleBackColor = true;
-            this.button12.Click += new System.EventHandler(this.Button12_Click);
             // 
             // groupBox10
             // 
@@ -3186,7 +3167,6 @@ namespace Monitor
             this.button11.TabIndex = 43;
             this.button11.Text = "Set Alarm Policy";
             this.button11.UseVisualStyleBackColor = true;
-            this.button11.Click += new System.EventHandler(this.Button11_Click);
             // 
             // groupBox9
             // 
@@ -3218,7 +3198,6 @@ namespace Monitor
             this.button10.TabIndex = 40;
             this.button10.Text = "Time Date Config";
             this.button10.UseVisualStyleBackColor = true;
-            this.button10.Click += new System.EventHandler(this.Button10_Click);
             // 
             // groupBox8
             // 
@@ -3263,7 +3242,6 @@ namespace Monitor
             this.button9.TabIndex = 38;
             this.button9.Text = "Vehicle Battery";
             this.button9.UseVisualStyleBackColor = true;
-            this.button9.Click += new System.EventHandler(this.Button9_Click);
             // 
             // groupBox7
             // 
@@ -3323,7 +3301,6 @@ namespace Monitor
             this.button8.TabIndex = 36;
             this.button8.Text = "Set Output Config";
             this.button8.UseVisualStyleBackColor = true;
-            this.button8.Click += new System.EventHandler(this.Button8_Click);
             // 
             // comboBox_OutputPulseLevel
             // 
@@ -3393,7 +3370,6 @@ namespace Monitor
             this.button7.TabIndex = 32;
             this.button7.Text = "Set Input Config";
             this.button7.UseVisualStyleBackColor = true;
-            this.button7.Click += new System.EventHandler(this.Button7_Click);
             // 
             // groupBox13
             // 
@@ -3455,7 +3431,6 @@ namespace Monitor
             this.button_SMSControl.TabIndex = 26;
             this.button_SMSControl.Text = "SMS Control";
             this.button_SMSControl.UseVisualStyleBackColor = true;
-            this.button_SMSControl.Click += new System.EventHandler(this.Button_SMSControl_Click);
             // 
             // groupBox15
             // 
@@ -4095,7 +4070,6 @@ namespace Monitor
             this.button41.TabIndex = 1;
             this.button41.Text = "Add";
             this.button41.UseVisualStyleBackColor = true;
-            this.button41.Click += new System.EventHandler(this.Button41_Click);
             // 
             // button40
             // 
@@ -4135,7 +4109,6 @@ namespace Monitor
             this.button37.TabIndex = 5;
             this.button37.Text = "Edit";
             this.button37.UseVisualStyleBackColor = true;
-            this.button37.Click += new System.EventHandler(this.Button37_Click);
             // 
             // listBox_SMSCommands
             // 
@@ -4558,20 +4531,6 @@ namespace Monitor
 
         }
 
-        private void label29_Click(object sender, EventArgs e)
-        {
-
-        }
-
-        private void label30_Click(object sender, EventArgs e)
-        {
-
-        }
-
-
-
-
-
         private void Button1_Click(object sender, System.EventArgs e)
         {
             if (comboBox_ConnectionNumber.Text == "None")
@@ -4701,15 +4660,6 @@ namespace Monitor
             }
 
 
-
-
-
-
-
-
-
-
-
         }
 
         private void PrintFotaIDStatus()
@@ -4792,11 +4742,6 @@ namespace Monitor
             }
         }
 
-        private void RichTextBox1_TextChanged(object sender, EventArgs e)
-        {
-
-        }
-
 
         private void TxtDataTx_TextChanged(object sender, EventArgs e)
         {
@@ -4865,125 +4810,6 @@ namespace Monitor
         }
 
 
-
-        private void ComboBox_InputIndex_SelectedIndexChanged(object sender, EventArgs e)
-        {
-
-        }
-
-
-
-        private void Button23_Click(object sender, EventArgs e)
-        {
-
-        }
-
-
-        private void Button24_Click(object sender, EventArgs e)
-        {
-
-        }
-
-        private void Button_SMSControl_Click(object sender, EventArgs e)
-        {
-
-        }
-
-        private void Button9_Click(object sender, EventArgs e)
-        {
-
-        }
-
-        private void Button10_Click(object sender, EventArgs e)
-        {
-
-        }
-
-        private void Button7_Click(object sender, EventArgs e)
-        {
-
-        }
-
-        private void Button13_Click(object sender, EventArgs e)
-        {
-
-        }
-
-        private void Button12_Click(object sender, EventArgs e)
-        {
-
-        }
-
-        private void Button11_Click(object sender, EventArgs e)
-        {
-
-        }
-
-        private void Button19_Click(object sender, EventArgs e)
-        {
-
-        }
-
-        private void Button22_Click(object sender, EventArgs e)
-        {
-
-        }
-
-        private void Button8_Click(object sender, EventArgs e)
-        {
-
-        }
-
-        private void Button21_Click(object sender, EventArgs e)
-        {
-
-        }
-
-        private void Button14_Click(object sender, EventArgs e)
-        {
-
-        }
-
-
-        private void Button15_Click(object sender, EventArgs e)
-        {
-
-        }
-
-        private void Button16_Click(object sender, EventArgs e)
-        {
-
-        }
-
-        private void Button17_Click(object sender, EventArgs e)
-        {
-
-        }
-
-        private void Button18_Click(object sender, EventArgs e)
-        {
-
-        }
-
-        private void Button26_Click(object sender, EventArgs e)
-        {
-
-        }
-
-        private void Button27_Click(object sender, EventArgs e)
-        {
-
-        }
-
-        private void Button25_Click(object sender, EventArgs e)
-        {
-
-        }
-
-        private void Button20_Click(object sender, EventArgs e)
-        {
-
-        }
 
         private void TxtS1_Clear_Click_1(object sender, EventArgs e)
         {
@@ -5504,27 +5330,7 @@ namespace Monitor
         }
 
         private readonly List<List<string>> CommandsToSend = new List<List<string>>();
-
-
-
-
-
-
-
-
-
-
-
-
-        private void Button29_Click_1(object sender, EventArgs e)
-        {
-
-        }
-
-        private void TextBox_GeneralMessage_TextChanged(object sender, EventArgs e)
-        {
-
-        }
+ 
 
         private double ChartCntX = 0, ChartCntY = 0;
         private double ChartCntY2 = 0;
@@ -5698,13 +5504,6 @@ namespace Monitor
             {
                 SerialTerminalRxTxLights();
             }
-
-
-
-
-
-
-
         }
 
         private void SerialTerminalRxTxLights()
@@ -5876,28 +5675,7 @@ namespace Monitor
         }
 
 
-        private void TabPage6_Click(object sender, EventArgs e)
-        {
-
-        }
-
-        private void Button_Set2_Click(object sender, EventArgs e)
-        {
-
-        }
-
-        private void Button_GenerateConfigFile_Click(object sender, EventArgs e)
-        {
-
-        }
-
-        private void Button_Set1_Click(object sender, EventArgs e)
-        {
-
-
-
-        }
-
+       
         private int FindZeroPaddingSize(int i_SignalLength)
         {
             uint mLogN = 0;
@@ -7533,11 +7311,7 @@ namespace Monitor
                         SystemLogger.LogMessage(Color.Red, Color.LightGray, ex.ToString(), New_Line = false, Show_Time = true);
                     }
 
-
-
                 }
-
-
 
             }
 
@@ -8177,35 +7951,6 @@ namespace Monitor
         }
 
 
-
-
-
-
-        private void CheckBox_EchoResponse_CheckedChanged(object sender, EventArgs e)
-        {
-
-        }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-        private void ComboBox1_SelectedIndexChanged(object sender, EventArgs e)
-        {
-
-        }
-
         private void UpdateCommandCLIHistory(string i_SendString)
         {
             Monitor.Properties.Settings.Default.CLICommad_History.Remove(i_SendString);
@@ -8346,22 +8091,8 @@ namespace Monitor
 
      
 
-     
-
 
         //textBox_UnitVersion
-
-
-
-
-
-
-
-
-
-
-
-
 
 
         private void TxtPortNo_TextChanged(object sender, EventArgs e)
@@ -8531,22 +8262,6 @@ namespace Monitor
 
         }
 
-
-
-
-
-
-
-
-        private void Button41_Click(object sender, EventArgs e)
-        {
-
-        }
-
-        private void Button37_Click(object sender, EventArgs e)
-        {
-
-        }
 
         private void SortSMSCommands()
         {
@@ -11045,14 +10760,6 @@ Note: eStatus enum 
             testPulseGenTextBoxs2();
         }
 
-        private void button74_Click_1(object sender, EventArgs e)
-        {
-
-
-
-
-        }
-
         private void Ctr_TextChanged(object sender, EventArgs e)
         {
             textBox_StatusUUT1_TextChanged(sender, e);
@@ -11440,36 +11147,6 @@ Note: eStatus enum 
             }
         }
 
-        private void tabPage6_Click_1(object sender, EventArgs e)
-        {
-
-        }
-
-        private void groupBox45_Enter(object sender, EventArgs e)
-        {
-
-        }
-
-        private void label127_Click(object sender, EventArgs e)
-        {
-
-        }
-
-        private void label128_Click(object sender, EventArgs e)
-        {
-
-        }
-
-        private void label129_Click(object sender, EventArgs e)
-        {
-
-        }
-
-        private void label133_Click(object sender, EventArgs e)
-        {
-
-        }
-
         private void textBox32_TextChanged(object sender, EventArgs e)
         {
             TextBox m_Textbox = (TextBox)sender;
@@ -11512,26 +11189,6 @@ Note: eStatus enum 
             }
         }
 
-        private void label131_Click(object sender, EventArgs e)
-        {
-
-        }
-
-        private void label34_Click(object sender, EventArgs e)
-        {
-
-        }
-
-        private void label38_Click(object sender, EventArgs e)
-        {
-
-        }
-
-        private void button59_Click_1(object sender, EventArgs e)
-        {
-
-        }
-
         private void textBox_WriteReadRegister_TextChanged(object sender, EventArgs e)
         {
             TextBox txtbox = (TextBox)sender;
@@ -11563,15 +11220,6 @@ Note: eStatus enum 
             {
                 txtbox.BackColor = Color.Red;
             }
-        }
-
-
-
-
-
-        private void tabPage3_Click(object sender, EventArgs e)
-        {
-
         }
 
 
@@ -11812,36 +11460,6 @@ Note: eStatus enum 
             }
         }
 
-        private void label65_Click(object sender, EventArgs e)
-        {
-
-        }
-
-
-
-
-
-
-
-
-
-
-
-        private void button_SystemMode_MouseClick(object sender, MouseEventArgs e)
-        {
-
-        }
-
-        private void button_SystemMode_MouseUp(object sender, MouseEventArgs e)
-        {
-
-        }
-
-        private void textBox_SystemMode_KeyDown(object sender, KeyEventArgs e)
-        {
-
-        }
-
         private void textBox_RFDelay_TextChanged(object sender, EventArgs e)
         {
             testRFTextboxs();
@@ -11893,98 +11511,6 @@ Note: eStatus enum 
                 txtbox.BackColor = Color.Red;
             }
         }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-        private void button32_Click_3(object sender, EventArgs e)
-        {
-
-            //textBox1_KeyDown(textBox1, new KeyEventArgs(Keys.Enter));
-        }
-
-        private void textBox25_KeyDown_1(object sender, KeyEventArgs e)
-        {
-
-        }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
         async void ReadDataGridToFlash(DataGridView i_DataGrid)
         {

@@ -7568,7 +7568,6 @@ namespace Monitor
                 if (checkBox_RxHex.Checked == true)
                 {
 
-
                     if (buffer[0] == 0x83)
                     {
                         SerialPortLogger.LogMessage(Color.Blue, Color.Pink, ConvertByteArraytToString(buffer.Take(2).ToArray()), New_Line = false, Show_Time = false);
@@ -7706,7 +7705,6 @@ namespace Monitor
             }
 
             bool IwatcherPrint = false;
-
 
             if (Key[0] == "POS")
             {
@@ -7886,8 +7884,6 @@ namespace Monitor
         }
         private static readonly Mutex mutexACKSMSReceived = new Mutex();
 
-
-
         private DateTime RetrieveLinkerTimestamp()
         {
             string filePath = System.Reflection.Assembly.GetCallingAssembly().Location;
@@ -7916,9 +7912,6 @@ namespace Monitor
             dt = dt.AddHours(TimeZone.CurrentTimeZone.GetUtcOffset(dt).Hours);
             return dt;
         }
-
-
-
 
         //  static int LastNumOfConnections = 0;
         private void TextBox_NumberOfOpenConnections_TextChanged(object sender, EventArgs e)
@@ -7961,7 +7954,6 @@ namespace Monitor
             }
 
         }
-
 
         private void UpdateCommandCLIHistory(string i_SendString)
         {

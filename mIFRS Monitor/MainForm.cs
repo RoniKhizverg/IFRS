@@ -51,6 +51,7 @@ namespace Monitor
 
         //NetworkStream clientStream;
 
+        public bool IsRonisFunction = false;
         private bool New_Line = false;
         private bool Show_Time;
         private TabControl tabControl_Main;
@@ -420,8 +421,8 @@ namespace Monitor
         private void InitializeComponent()
         {
             this.components = new System.ComponentModel.Container();
-            System.Windows.Forms.DataVisualization.Charting.ChartArea chartArea5 = new System.Windows.Forms.DataVisualization.Charting.ChartArea();
-            System.Windows.Forms.DataVisualization.Charting.Legend legend5 = new System.Windows.Forms.DataVisualization.Charting.Legend();
+            System.Windows.Forms.DataVisualization.Charting.ChartArea chartArea2 = new System.Windows.Forms.DataVisualization.Charting.ChartArea();
+            System.Windows.Forms.DataVisualization.Charting.Legend legend2 = new System.Windows.Forms.DataVisualization.Charting.Legend();
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(MainForm));
             this.groupBox_ServerSettings = new System.Windows.Forms.GroupBox();
             this.textBox_ServerOpen = new System.Windows.Forms.TextBox();
@@ -1261,7 +1262,6 @@ namespace Monitor
             this.textBox_ClientPort.Size = new System.Drawing.Size(92, 26);
             this.textBox_ClientPort.TabIndex = 3;
             this.textBox_ClientPort.Text = "7";
-            this.textBox_ClientPort.TextChanged += new System.EventHandler(this.textBox_ClientPort_TextChanged);
             // 
             // textBox_ClientIP
             // 
@@ -1471,17 +1471,17 @@ namespace Monitor
             // 
             // chart1
             // 
-            chartArea5.AxisX.Title = "Freq";
-            chartArea5.AxisX.TitleFont = new System.Drawing.Font("Calibri", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            chartArea5.AxisY.Title = "Power [dBm]";
-            chartArea5.AxisY.TitleFont = new System.Drawing.Font("Calibri", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            chartArea5.Name = "ChartArea1";
-            this.chart1.ChartAreas.Add(chartArea5);
-            legend5.Font = new System.Drawing.Font("Calibri", 14.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            legend5.IsTextAutoFit = false;
-            legend5.Name = "Legend1";
-            legend5.TitleFont = new System.Drawing.Font("Calibri", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.chart1.Legends.Add(legend5);
+            chartArea2.AxisX.Title = "Freq";
+            chartArea2.AxisX.TitleFont = new System.Drawing.Font("Calibri", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            chartArea2.AxisY.Title = "Power [dBm]";
+            chartArea2.AxisY.TitleFont = new System.Drawing.Font("Calibri", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            chartArea2.Name = "ChartArea1";
+            this.chart1.ChartAreas.Add(chartArea2);
+            legend2.Font = new System.Drawing.Font("Calibri", 14.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            legend2.IsTextAutoFit = false;
+            legend2.Name = "Legend1";
+            legend2.TitleFont = new System.Drawing.Font("Calibri", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.chart1.Legends.Add(legend2);
             this.chart1.Location = new System.Drawing.Point(178, 2);
             this.chart1.Margin = new System.Windows.Forms.Padding(2);
             this.chart1.Name = "chart1";
@@ -7007,21 +7007,28 @@ namespace Monitor
 
         private void SendMessageToSystemLogger(string i_msg)
         {
-
             SystemLogger.LogMessage(Color.Blue, Color.Azure, "", New_Line = false, Show_Time = true);
             SystemLogger.LogMessage(Color.Blue, Color.Azure, "Rx:>", false, false);
-
-            //if (i_msg.Contains("ACK") == true)
-            //{
-            //    SystemLogger.LogMessage(Color.DarkGreen, Color.White, i_msg, true, false);
-            //}
-            //else
-            //{
             SystemLogger.LogMessage(Color.Blue, Color.LightGray, i_msg, true, false);
-            //}
+
 
             GlobalSystemResultReceived += i_msg;
         }
+
+        private void SendMessageToSystemLogger(string i_msg, bool isCorrect)
+        {
+            SystemLogger.LogMessage(Color.Blue, Color.Azure, "", New_Line = false, Show_Time = true);
+            SystemLogger.LogMessage(Color.Blue, Color.Azure, "Rx:>", false, false);
+
+            if (isCorrect == true)
+                SystemLogger.LogMessage(Color.Blue, Color.LightGreen, i_msg, true, false);
+            else
+                SystemLogger.LogMessage(Color.Blue, Color.Red, i_msg, true, false);
+
+
+            GlobalSystemResultReceived += i_msg;
+        }
+
 
         void DecodeStatus(byte[] i_IncomingBytes)
         {
@@ -7068,7 +7075,6 @@ namespace Monitor
             //  SystemLogger.LogMessage(Color.Blue, Color.Azure, String.Format("AFE79XX_0V95_UV_COUNTER : [{0}]", i_IncomingBytes[72]), true, false);
             SystemLogger.LogMessage(Color.Blue, Color.Azure, String.Format("SUM_COUNTER_ALARMS : [{0} {1}]", i_IncomingBytes[73], i_IncomingBytes[74]), true, false);
 
-
             SystemLogger.LogMessage(Color.Blue, Color.Azure, String.Format("FPGA_DDR_OV_COUNTER : [{0}]", i_IncomingBytes[62]), true, false);
             SystemLogger.LogMessage(Color.Blue, Color.Azure, String.Format("FPGA_DDR_OV_COUNTER : [{0}]", i_IncomingBytes[62]), true, false);
             SystemLogger.LogMessage(Color.Blue, Color.Azure, String.Format("FPGA_DDR_OV_COUNTER : [{0}]", i_IncomingBytes[62]), true, false);
@@ -7077,8 +7083,6 @@ namespace Monitor
 
 
             ShowStatus = false;
-
-
         }
 
         void DecodeReadCommand(byte[] i_IncomingBytes)
@@ -7195,7 +7199,6 @@ namespace Monitor
             i_IncomingBytes = i_IncomingBytes.Skip(80).ToArray();
 
         }
-
         private void ParseKratosIncomeFrame(byte[] i_IncomeBuffer)
         {
             try
@@ -7316,7 +7319,6 @@ namespace Monitor
             }
 
         }
-
 
 
         //bool timer_General_TranssmitionPeriodicallyEnable = false;
@@ -7494,15 +7496,11 @@ namespace Monitor
                     PrintDictineryIDKeys();
                 }
 
-
-
             }
             catch (Exception ex)
             {
                 MessageBox.Show(ex.Message);
             }
-
-
 
         }
 
@@ -7544,44 +7542,7 @@ namespace Monitor
             {
                 return;
             }
-
-            //if (ComPortClosing == true)
-            //{
-            //    //Thread.Sleep(400);
-            //    serialPort.Close();
-            //    ComPortClosing = false;
-
-            //    //checkBox_ComportOpen.Checked = false;
-
-            //    cmbBaudRate.Invoke(new EventHandler(delegate
-            //    {
-            //        //button_OpenPort.Checked = false;
-            //        button_OpenPort.Enabled = true;
-            //        gbPortSettings.Enabled = true;
-
-            //        button_OpenPort.BackColor = default;
-            //        label_SerialPortConnected.BackColor = default;
-            //        label_SerialPortStatus.Text = "";
-
-            //        //cmbBaudRate.Enabled = true;
-            //        //cmbDataBits.Enabled = true;
-            //        //cmbParity.Enabled = true;
-            //        //cmb_PortName.Enabled = true;
-            //        //cmb_StopBits.Enabled = true;
-            //    }));
-
-            //    CloseSerialPortTimer = false;
-
-            //    SerialPortLogger.LogMessage(Color.Orange, Color.LightGray, "Serial port Closed", New_Line = true, Show_Time = true);
-            //    return;
-            //}
-
-            // This method will be called when there is data waiting in the port's buffer
             Thread.Sleep(300);
-
-
-
-
 
             // Obtain the number of bytes waiting in the port's buffer
             int bytes = serialPort.BytesToRead;
@@ -7602,44 +7563,100 @@ namespace Monitor
             SerialPortLogger.LogMessage(Color.Blue, Color.Azure, "", New_Line = false, Show_Time = true);
             SerialPortLogger.LogMessage(Color.Blue, Color.Azure, "Rx:>", false, false);
 
-            if (checkBox_RxHex.Checked == true)
+            if (IsRonisFunction == false)
             {
-
-
-                if (buffer[0] == 0x83)
+                if (checkBox_RxHex.Checked == true)
                 {
-                    SerialPortLogger.LogMessage(Color.Blue, Color.Pink, ConvertByteArraytToString(buffer.Take(2).ToArray()), New_Line = false, Show_Time = false);
-                    SerialPortLogger.LogMessage(Color.Blue, Color.Cyan, ConvertByteArraytToString(buffer.Skip(2).Take(23).ToArray()), New_Line = false, Show_Time = false);
-                    SerialPortLogger.LogMessage(Color.Blue, Color.Azure, ConvertByteArraytToString(buffer.Skip(25).Take(55).ToArray()), New_Line = false, Show_Time = false);
-                    SerialPortLogger.LogMessage(Color.Blue, Color.PeachPuff, ConvertByteArraytToString(buffer.Skip(76).Take(4).ToArray()), New_Line = true, Show_Time = false);
+
+
+                    if (buffer[0] == 0x83)
+                    {
+                        SerialPortLogger.LogMessage(Color.Blue, Color.Pink, ConvertByteArraytToString(buffer.Take(2).ToArray()), New_Line = false, Show_Time = false);
+                        SerialPortLogger.LogMessage(Color.Blue, Color.Cyan, ConvertByteArraytToString(buffer.Skip(2).Take(23).ToArray()), New_Line = false, Show_Time = false);
+                        SerialPortLogger.LogMessage(Color.Blue, Color.Azure, ConvertByteArraytToString(buffer.Skip(25).Take(55).ToArray()), New_Line = false, Show_Time = false);
+                        SerialPortLogger.LogMessage(Color.Blue, Color.PeachPuff, ConvertByteArraytToString(buffer.Skip(76).Take(4).ToArray()), New_Line = true, Show_Time = false);
+                    }
+                    else
+                    {
+                        string IncomingHexMessage = ConvertByteArraytToString(buffer);
+                        SerialPortLogger.LogMessage(Color.Blue, Color.Azure, IncomingHexMessage, New_Line = true, Show_Time = false);//hjg
+                    }
+
+                    ParseKratosIncomeFrame(buffer);
                 }
                 else
                 {
-                    string IncomingHexMessage = ConvertByteArraytToString(buffer);
-                    SerialPortLogger.LogMessage(Color.Blue, Color.Azure, IncomingHexMessage, New_Line = true, Show_Time = false);
+
+                    string IncomingString = System.Text.Encoding.Default.GetString(buffer);
+                    string[] lines = Regex.Split(IncomingString, "\r\n");
+
+                    foreach (string line in lines)
+                    {
+                        SerialPortLogger.LogMessage(Color.Blue, Color.Azure, line, New_Line = true, Show_Time = false);
+                    }
+
                 }
-
-
-
-
-
-
-
-                ParseKratosIncomeFrame(buffer);
             }
             else
             {
-
-                string IncomingString = System.Text.Encoding.Default.GetString(buffer);
-
-
-
-
-                string[] lines = Regex.Split(IncomingString, "\r\n");
-
-                foreach (string line in lines)
+                IsRonisFunction = false;
+                if (checkBox_RxHex.Checked == true)
                 {
-                    SerialPortLogger.LogMessage(Color.Blue, Color.Azure, line, New_Line = true, Show_Time = false);
+                    int newMessageLength = buffer.Length - 2; // message with priamble and length size
+                    byte[] bufferWithoutChecksum = new byte[newMessageLength];
+                    Array.Copy(buffer, bufferWithoutChecksum, newMessageLength);
+
+                    int originalBufferLength = buffer.Length;
+                    int checkSumLength = 2;
+                    byte[] checksum = new byte[checkSumLength];
+                    Array.Copy(buffer, originalBufferLength - checkSumLength, checksum, 0, checkSumLength);
+                    Array.Reverse(checksum);
+                    ushort checksumValue = BitConverter.ToUInt16(checksum, 0); // change this if you want to worng checksum for checks GUI response     
+                    byte[] ByteChecksumValue = BitConverter.GetBytes(checksumValue);
+                    Array.Reverse(ByteChecksumValue);
+                    string StringChecksumValue = ConvertByteArraytToString(ByteChecksumValue);
+
+                    int messageLength = buffer.Length - 5;
+                    byte[] message = new byte[messageLength];
+                    Array.Copy(buffer, 3, message, 0, messageLength);
+
+                    string RxMessageToSystemLogger = "RecvDataSerial " + Encoding.ASCII.GetString(message) + "\n";
+                    string correctChecksum;
+                    Array.Reverse(checksum);
+
+                    ushort CalcChecksumAfterRecv = CalculateCS(bufferWithoutChecksum);
+                    byte[] byteCalcChecksumAfterRecv = BitConverter.GetBytes(CalcChecksumAfterRecv);
+                    Array.Reverse(byteCalcChecksumAfterRecv);
+                    string StringRecvChecksum = ConvertByteArraytToString(byteCalcChecksumAfterRecv);
+                    bool IsCorrectChecksum = false;
+                    if (IsMessageValid(bufferWithoutChecksum, checksumValue) == true)
+                    {
+                        IsCorrectChecksum= true;
+                        correctChecksum = "Correct Checksum!!\nRecv checksum from sender: " + StringChecksumValue + "\nCalc massage checksum after Recv: " + StringRecvChecksum;
+                        RxMessageToSystemLogger += correctChecksum;
+                    }
+                    else
+                    {
+                        IsCorrectChecksum = false;
+                        correctChecksum = "Incorrect Checksum!!\nRecv checksum from sender: " + StringChecksumValue + "\nCalc massage checksum after Recv: " + StringRecvChecksum;
+                        RxMessageToSystemLogger += correctChecksum;
+                    }
+
+                    SendMessageToSystemLogger(RxMessageToSystemLogger, IsCorrectChecksum);
+                    string IncomingHexMessage = ConvertByteArraytToString(buffer);
+                    SerialPortLogger.LogMessage(Color.Blue, Color.Azure, IncomingHexMessage, New_Line = true, Show_Time = false);
+                    //SerialPortLogger.LogMessage(Color.Blue, Color.Azure, checksumString, New_Line = true, Show_Time = false);
+                    //SerialPortLogger.LogMessage(Color.Blue, Color.Azure, correctChecksum, New_Line = true, Show_Time = false);
+                }
+                else
+                {
+                    string IncomingString = System.Text.Encoding.Default.GetString(buffer);
+                    string[] lines = Regex.Split(IncomingString, "\r\n");
+
+                    foreach (string line in lines)
+                    {
+                        SerialPortLogger.LogMessage(Color.Blue, Color.Azure, line, New_Line = true, Show_Time = false);
+                    }
                 }
 
             }
@@ -7648,8 +7665,6 @@ namespace Monitor
             {
                 WriteBufferInfo(buffer);
             }
-
-
 
         }
 
@@ -7870,9 +7885,6 @@ namespace Monitor
             }
         }
         private static readonly Mutex mutexACKSMSReceived = new Mutex();
-
-
-
 
 
 
@@ -12307,12 +12319,7 @@ This Process can take 1 minute.";
                 return ret;
             }
 
-            if (tempStr[1].Contains("_s") == true)
-            {
-                tempStr[1] = tempStr[1].Replace("_s", "");
-                ShowStatus = true;
-            }
-
+            
             byte[] buffer = StringToByteArray(tempStr[1]);
             if (buffer == null || buffer.Length != 4)
             {
@@ -12353,6 +12360,11 @@ This Process can take 1 minute.";
             {
                 return ret;
             }
+
+
+
+
+            //////////////Start Execution
             String Command = tempStr[0];
             String RegisterAddress32bits = tempStr[1];
             String DataToWrite32bits = tempStr[2];
@@ -12458,6 +12470,8 @@ This Process can take 1 minute.";
                 {
                     //Execute the command
                     PrintToSystemLogerTxMessage(i_Command);
+
+
                     textBox_SendSerialPort.Text = ConvertByteArraytToString(ListBytes.ToArray());
 
                     button_SendSerialPort_Click(null, null);
@@ -12467,6 +12481,144 @@ This Process can take 1 minute.";
 
             return ret;
         }
+
+
+
+        async Task<String> SendDataSerial(String i_Command, bool i_OnlyCheckValidity)
+        {
+            String ret = "";
+            IsRonisFunction = true;
+            String[] tempStr = i_Command.Split(' ');
+
+            //Check Validity of the command first and retuen string error if something wrong. //////////////////////////////////////////////////////////////
+            //////////////////////////////////////////////////////////////
+            /////////////////////////////////////////////////////////////////
+            ///
+
+
+            int NumOfArguments = tempStr.Length;
+            if (!(NumOfArguments == 2))
+            {
+                ret += String.Format("\n Arguments number should be 1, see example", NumOfArguments);
+                return ret;
+            }
+
+
+            byte[] buffer = StringToByteArray(tempStr[1]);
+
+
+            if (i_OnlyCheckValidity == true || ret != "")
+            {
+                return ret;
+            }
+
+
+
+            // Take the second element of an array of strings called tempStr
+            // and assign it to a string variable called HexString
+            String HexString = tempStr[1];
+
+            // Convert the input string to bytes
+            byte[] bytes = Encoding.ASCII.GetBytes(HexString);
+
+            // Create a new byte array with the UART format: 0x55 Length [2 bytes] data [x bytes] CS [2 bytes]
+            // Calculate the length of the data (excluding prefix and CS)
+            ushort length = (ushort)(bytes.Length + 2);
+            byte[] DataToSend = new byte[length + 3];
+            DataToSend[0] = 0x55; //preamble
+            DataToSend[1] = (byte)(length +(byte)1 & 0xFF);
+            DataToSend[2] = (byte)((length >> 8) & 0xFF);
+            bytes.CopyTo(DataToSend, 3);
+
+            // Calculate the CS (checksum)
+            ushort cs = CalculateCS(DataToSend);
+
+            
+            DataToSend[length + 3 - 1] = (byte)(cs & 0xFF);
+            DataToSend[length + 3 - 2] = (byte)((cs >> 8) & 0xFF);
+           
+
+
+            if (ret == "" && i_OnlyCheckValidity == false)
+            {
+                //Execute the command
+                PrintToSystemLogerTxMessage(i_Command);
+
+
+                textBox_SendSerialPort.Text = ConvertByteArraytToString(DataToSend);
+
+                button_SendSerialPort_Click(null, null);
+
+            }
+
+        return ret;
+
+        }
+
+        public ushort CalculateCS(byte[] data)
+        {
+            FrameAnalizer = "";
+            ushort checksum = 0;
+
+            for (int i = 0; i < data.Length; i++)
+            {
+                checksum += data[i];
+                FrameAnalizer += data[i].ToString("X2") + " + ";
+            }
+
+            FrameAnalizer += " = ";
+
+            // Take the 1's complement of the result
+            checksum = (ushort)~checksum;
+
+            FrameAnalizer += checksum.ToString("X2");
+
+            return checksum;
+        }
+
+        public bool IsMessageValid(byte[] message, ushort expectedChecksum)
+        {
+            // Calculate the actual checksum of the message
+            ushort actualChecksum = CalculateCS(message);
+
+            // Compare the actual checksum with the expected checksum
+            return actualChecksum == expectedChecksum;
+        }
+
+
+
+        /*
+        UInt32 CalculateChecksum(byte[] i_Bufffer)
+        {
+            FrameAnalizer = "";
+            UInt32 CheckSum = 0;
+            for (int i = 0; i < i_Bufffer.Length; i = i + 4)
+            {
+                byte[] tempArr = i_Bufffer.Skip(i).Take(4).ToArray();
+                //byte[] temp = SendFrame.(i, 4);
+                //byte[] tempArr = temp.ToArray();
+
+                //tempArr = tempArr.Reverse().ToArray();
+
+                FrameAnalizer += ConvertByteArraytToString(tempArr) + " +  \n";
+
+                UInt32 Value = BitConverter.ToUInt32(tempArr, 0);
+
+                CheckSum += Value;
+            }
+
+            FrameAnalizer += " -------------\n";
+            FrameAnalizer += CheckSum.ToString("X8") + " \n";
+
+            byte[] bytes = BitConverter.GetBytes(CheckSum);
+            bytes = bytes.Reverse().ToArray();
+            CheckSum = BitConverter.ToUInt32(bytes, 0);
+
+            return CheckSum;
+        }
+        */
+
+
 
 
 
@@ -12803,7 +12955,7 @@ This Process can take 1 minute.";
 
             return CheckSum;
         }
-
+       
         String FrameAnalizer = "";
 
         bool ShowStatus = false;
@@ -13012,6 +13164,10 @@ This Process can take 1 minute.";
                     {
                         case "WriteReg32":
                             ret = await WriteReg32(i_Command, i_OnlyCheckValidity);
+                            break;
+
+                        case "SendDataSerial":
+                            ret = await SendDataSerial(i_Command, i_OnlyCheckValidity);
                             break;
 
                         case "ReadReg32":
@@ -13399,15 +13555,6 @@ This Process can take 1 minute.";
             toolTip1.Show("Line: " + (lineIndex + 1).ToString(), m_richtext, 2000);
         }
 
-        private void checkBox_Debug_CheckedChanged(object sender, EventArgs e)
-        {
-
-        }
-
-        private void textBox_ClientPort_TextChanged(object sender, EventArgs e)
-        {
-
-        }
 
         private void checkBox_Openall_CheckedChanged(object sender, EventArgs e)
         {
@@ -13606,6 +13753,30 @@ WriteReg32 00000000_s 1234ABCD
 
 
 
+            CommandClass SendDataSerial = new CommandClass("SendDataSerial",
+@"
+Description: 
+calc checksum, sends it to GUI that will check if the checksum is correct
+
+Number of arguments:
+1
+
+Syntax:
+SendDataSerial 
+Hex string 
+
+Example:
+
+SendDataSerial 1234
+    calc checksum and sends it to GUI",
+
+"SendDataSerial 1234");
+
+            List_AllCommands.Add(SendDataSerial);
+
+
+
+
 
 
 
@@ -13773,8 +13944,6 @@ Use the arrows Up, Down and Tab for autocomplition.
                 tabControl_Main.TabPages.RemoveAt(0);
                 tabControl_Main.TabPages.RemoveAt(0);
                 tabControl_Main.TabPages.RemoveAt(0);
-
-
 
                 textBox_CommandHelp.Text = CLI_Help;
 

@@ -51,7 +51,6 @@ namespace Monitor
 
         //NetworkStream clientStream;
 
-        public bool IsRonisFunction = false;
         private bool New_Line = false;
         private bool Show_Time;
         private TabControl tabControl_Main;
@@ -7563,44 +7562,9 @@ namespace Monitor
             SerialPortLogger.LogMessage(Color.Blue, Color.Azure, "", New_Line = false, Show_Time = true);
             SerialPortLogger.LogMessage(Color.Blue, Color.Azure, "Rx:>", false, false);
 
-            if (IsRonisFunction == false)
-            {
                 if (checkBox_RxHex.Checked == true)
                 {
-
-                    if (buffer[0] == 0x83)
-                    {
-                        SerialPortLogger.LogMessage(Color.Blue, Color.Pink, ConvertByteArraytToString(buffer.Take(2).ToArray()), New_Line = false, Show_Time = false);
-                        SerialPortLogger.LogMessage(Color.Blue, Color.Cyan, ConvertByteArraytToString(buffer.Skip(2).Take(23).ToArray()), New_Line = false, Show_Time = false);
-                        SerialPortLogger.LogMessage(Color.Blue, Color.Azure, ConvertByteArraytToString(buffer.Skip(25).Take(55).ToArray()), New_Line = false, Show_Time = false);
-                        SerialPortLogger.LogMessage(Color.Blue, Color.PeachPuff, ConvertByteArraytToString(buffer.Skip(76).Take(4).ToArray()), New_Line = true, Show_Time = false);
-                    }
-                    else
-                    {
-                        string IncomingHexMessage = ConvertByteArraytToString(buffer);
-                        SerialPortLogger.LogMessage(Color.Blue, Color.Azure, IncomingHexMessage, New_Line = true, Show_Time = false);//hjg
-                    }
-
-                    ParseKratosIncomeFrame(buffer);
-                }
-                else
-                {
-
-                    string IncomingString = System.Text.Encoding.Default.GetString(buffer);
-                    string[] lines = Regex.Split(IncomingString, "\r\n");
-
-                    foreach (string line in lines)
-                    {
-                        SerialPortLogger.LogMessage(Color.Blue, Color.Azure, line, New_Line = true, Show_Time = false);
-                    }
-
-                }
-            }
-            else
-            {
-                IsRonisFunction = false;
-                if (checkBox_RxHex.Checked == true)
-                {
+    
                     int newMessageLength = buffer.Length - 2; // message with priamble and length size
                     byte[] bufferWithoutChecksum = new byte[newMessageLength];
                     Array.Copy(buffer, bufferWithoutChecksum, newMessageLength);
@@ -7619,7 +7583,12 @@ namespace Monitor
                     byte[] message = new byte[messageLength];
                     Array.Copy(buffer, 3, message, 0, messageLength);
 
-                    string RxMessageToSystemLogger = "RecvDataSerial " + Encoding.ASCII.GetString(message) + "\n";
+                    Array.Reverse(message);
+                    string messageString = ConvertByteArraytToString(message);
+                    messageString = messageString.Replace(" ", ""); // remove white spaces
+
+
+                    string RxMessageToSystemLogger = "RecvDataSerial " + messageString + "\n";
                     string correctChecksum;
                     Array.Reverse(checksum);
 
@@ -7628,6 +7597,8 @@ namespace Monitor
                     Array.Reverse(byteCalcChecksumAfterRecv);
                     string StringRecvChecksum = ConvertByteArraytToString(byteCalcChecksumAfterRecv);
                     bool IsCorrectChecksum = false;
+
+
                     if (IsMessageValid(bufferWithoutChecksum, checksumValue) == true)
                     {
                         IsCorrectChecksum= true;
@@ -7658,7 +7629,7 @@ namespace Monitor
                     }
                 }
 
-            }
+            
 
             if (checkBox_WriteFrameInformation.Checked == true)
             {
@@ -8898,24 +8869,64 @@ namespace Monitor
         {
             try
             {
+                
                 string str = richTextBox_ClientTx.Text;
-                Stream stm = ClientSocket.GetStream();
+                /*
+                String[] command = str.Split(' ');
+                if (command[0].Equals("SendDataETHERNET"))
+                {
 
-                ASCIIEncoding asen = new ASCIIEncoding();
-                byte[] ba = asen.GetBytes(str);
+                             
+                    int NumOfArguments = 2;
+                    if (command.Length != 2)
+                    {
+                        str = String.Format("\n Arguments number should be 1, see example", NumOfArguments);
+                    }
 
-                //byte[] sspData = SSP_Protocol.SSP_Protocol.SSPPacket_Encoder(SSP_Protocol.eMessegeType.TRACE, ba);
+                    Stream stm = ClientSocket.GetStream();
 
-                // Console.WriteLine("Sending...");
+                    ASCIIEncoding asen = new ASCIIEncoding();
+                    byte[] ba = asen.GetBytes(str);
 
-                stm.Write(ba, 0, ba.Length);
+                    //byte[] sspData = SSP_Protocol.SSP_Protocol.SSPPacket_Encoder(SSP_Protocol.eMessegeType.TRACE, ba);
 
-                //WaitforBufferFull = 1;
+                    // Console.WriteLine("Sending...");
 
-                //ClentSendData++;
-                //richTextBox_ClientTx.Text = "Send Data to Server " + ClentSendData;
+                    stm.Write(ba, 0, ba.Length);
 
-                // byte[] bb = new byte[100];
+                    //WaitforBufferFull = 1;
+
+                    //ClentSendData++;
+                    //richTextBox_ClientTx.Text = "Send Data to Server " + ClentSendData;
+
+                    // byte[] bb = new byte[100];
+                }
+
+                else
+                {
+                */
+                    Stream stm = ClientSocket.GetStream();
+
+                    ASCIIEncoding asen = new ASCIIEncoding();
+                    byte[] ba = asen.GetBytes(str);
+
+                    //byte[] sspData = SSP_Protocol.SSP_Protocol.SSPPacket_Encoder(SSP_Protocol.eMessegeType.TRACE, ba);
+
+                    // Console.WriteLine("Sending...");
+
+                    stm.Write(ba, 0, ba.Length);
+
+                    //WaitforBufferFull = 1;
+
+                    //ClentSendData++;
+                    //richTextBox_ClientTx.Text = "Send Data to Server " + ClentSendData;
+
+                    // byte[] bb = new byte[100];
+
+
+
+
+                //}
 
             }
             catch
@@ -12479,7 +12490,6 @@ This Process can take 1 minute.";
         async Task<String> SendDataSerial(String i_Command, bool i_OnlyCheckValidity)
         {
             String ret = "";
-            IsRonisFunction = true;
             String[] tempStr = i_Command.Split(' ');
 
             //Check Validity of the command first and retuen string error if something wrong. //////////////////////////////////////////////////////////////
@@ -12488,16 +12498,22 @@ This Process can take 1 minute.";
             ///
 
 
+
+
+            
             int NumOfArguments = tempStr.Length;
-            if (!(NumOfArguments == 2))
+            if (!(NumOfArguments == 2) || tempStr[1] == "")
             {
                 ret += String.Format("\n Arguments number should be 1, see example", NumOfArguments);
                 return ret;
             }
 
-
             byte[] buffer = StringToByteArray(tempStr[1]);
-
+            if (buffer == null)
+            {
+                ret += String.Format("\n Argument [{0}] invalid not hex value", tempStr[1]);
+                //   return ret;
+            }
 
             if (i_OnlyCheckValidity == true || ret != "")
             {
@@ -12510,25 +12526,40 @@ This Process can take 1 minute.";
             // and assign it to a string variable called HexString
             String HexString = tempStr[1];
 
-            // Convert the input string to bytes
-            byte[] bytes = Encoding.ASCII.GetBytes(HexString);
+            // Convert the input string to bytes in big-endian format
+            byte[] bytes = Enumerable.Range(0, HexString.Length)
+                                     .Where(x => x % 2 == 0)
+                                     .Select(x => Convert.ToByte(HexString.Substring(x, 2), 16))
+                                     .Reverse()
+                                     .ToArray();
 
             // Create a new byte array with the UART format: 0x55 Length [2 bytes] data [x bytes] CS [2 bytes]
-            // Calculate the length of the data (excluding prefix and CS)
-            ushort length = (ushort)(bytes.Length + 2);
+            // Calculate the length of the data until the CS (excluding prefix and CS)
+            ushort dataLength = (ushort)(bytes.Length);
+            ushort length = (ushort)(dataLength + 2);
+
+            // Create a new byte array in big-endian format
             byte[] DataToSend = new byte[length + 3];
             DataToSend[0] = 0x55; //preamble
-            DataToSend[1] = (byte)(length +(byte)1 & 0xFF);
-            DataToSend[2] = (byte)((length >> 8) & 0xFF);
+            DataToSend[1] = (byte)((dataLength >> 8) & 0xFF); //data length msb
+            DataToSend[2] = (byte)(dataLength & 0xFF); //data length lsb
             bytes.CopyTo(DataToSend, 3);
 
             // Calculate the CS (checksum)
             ushort cs = CalculateCS(DataToSend);
 
-            
-            DataToSend[length + 3 - 1] = (byte)(cs & 0xFF);
-            DataToSend[length + 3 - 2] = (byte)((cs >> 8) & 0xFF);
-           
+            // Convert the checksum to big-endian format
+            byte[] csBytes = BitConverter.GetBytes(cs);
+            if (BitConverter.IsLittleEndian)
+                Array.Reverse(csBytes);
+            ushort bigEndianCs = BitConverter.ToUInt16(csBytes, 0);
+
+            // Add the CS to the byte array in big-endian format
+            DataToSend[length + 3 - 1] = (byte)((bigEndianCs >> 8) & 0xFF); //CS msb
+            DataToSend[length + 3 - 2] = (byte)(bigEndianCs & 0xFF); //CS lsb
+
+
+
 
 
             if (ret == "" && i_OnlyCheckValidity == false)
@@ -12561,7 +12592,7 @@ This Process can take 1 minute.";
             FrameAnalizer += " = ";
 
             // Take the 1's complement of the result
-            checksum = (ushort)~checksum;
+            //checksum = (ushort)~checksum;
 
             FrameAnalizer += checksum.ToString("X2");
 

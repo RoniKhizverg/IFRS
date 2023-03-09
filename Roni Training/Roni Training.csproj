@@ -9,7 +9,7 @@
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
     <ApplicationIcon>Kratos icon.ico</ApplicationIcon>
     <AssemblyKeyContainerName />
-    <AssemblyName>mIFRS_3036</AssemblyName>
+    <AssemblyName>Roni Training</AssemblyName>
     <AssemblyOriginatorKeyFile />
     <DefaultClientScript>JScript</DefaultClientScript>
     <DefaultHTMLPageLayout>Grid</DefaultHTMLPageLayout>
@@ -39,7 +39,7 @@
     <ProductName>ComCenterGilProductName</ProductName>
     <PublisherName>Gil Ramon</PublisherName>
     <SuiteName>ComCenterGilsuite</SuiteName>
-    <ApplicationRevision>11</ApplicationRevision>
+    <ApplicationRevision>2</ApplicationRevision>
     <ApplicationVersion>0.0.0.%2a</ApplicationVersion>
     <UseApplicationTrust>false</UseApplicationTrust>
     <PublishWizardCompleted>true</PublishWizardCompleted>
@@ -147,15 +147,15 @@
       <DesignTimeSharedInput>True</DesignTimeSharedInput>
       <DependentUpon>Settings.settings</DependentUpon>
     </Compile>
-    <Compile Include="MainForm.cs">
+    <Compile Include="Roni Training.cs">
       <SubType>Form</SubType>
     </Compile>
     <EmbeddedResource Include="Properties\Resources.resx">
       <Generator>ResXFileCodeGenerator</Generator>
       <LastGenOutput>Resources.Designer.cs</LastGenOutput>
     </EmbeddedResource>
-    <EmbeddedResource Include="MainForm.resx">
-      <DependentUpon>MainForm.cs</DependentUpon>
+    <EmbeddedResource Include="Roni Training.resx">
+      <DependentUpon>Roni Training.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <ItemGroup>

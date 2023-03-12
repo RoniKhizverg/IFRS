@@ -4529,9 +4529,16 @@ namespace Monitor
 
 
         }
-
+        //sent data to client
         private void Button1_Click(object sender, System.EventArgs e)
         {
+             if (m_Server==null)
+             {
+                WriteToSystemStatus("Server is not open", 3, Color.Orange);
+                return;
+             }
+
+
             if (comboBox_ConnectionNumber.Text == "None")
             {
                 return;
@@ -4605,7 +4612,6 @@ namespace Monitor
                     txtPortNo.Enabled = false;
 
 
-
                 }
                 catch (SocketException se)
                 {
@@ -4617,7 +4623,7 @@ namespace Monitor
                 ListenBox.BackColor = default;
 
                 m_Server.Close_Server();
-
+                m_Server = null;
                 txtPortNo.Enabled = true;
 
             }
@@ -4632,12 +4638,24 @@ namespace Monitor
             ServerLogger.LogMessage(Color.Black, Color.White, mye.StrData, New_Line = true, Show_Time = false);
         }
 
+        /*
+        private void Client_InformationNotifyDelegate(object sender, EventArgs e)
+        {
+
+            ServerLogger.LogMessage(Color.Black, Color.White, "", New_Line = false, Show_Time = true);
+            ServerLogger.LogMessage(Color.Brown, Color.White, "[Internal Server] ", New_Line = false, Show_Time = false);
+            ServerLogger.LogMessage(Color.Black, Color.White, mye.StrData, New_Line = true, Show_Time = false);
+        }
+        */
+
 
 
         //string[] UnitNumberToConnections = new string[30];
         private readonly Dictionary<string, string> ConnectionToIDdictionary = new Dictionary<string, string>();
         private readonly Dictionary<string, string> IDToFOTA_Status = new Dictionary<string, string>();
 
+
+        //Print the message the client sent
         private void GilServer_DataRecievedNotifyDelegate(object sender, EventArgs e)
         {
             Gil_Server.Server.DataEventArgs mye = (Gil_Server.Server.DataEventArgs)e;
@@ -4646,8 +4664,11 @@ namespace Monitor
 
             //ServerLogger.LogMessage(Color.Black, Color.White, "", New_Line = false, Show_Time = true);
             //ServerLogger.LogMessage(Color.Brown, Color.White, "[Internal Server] ", New_Line = false, Show_Time = false);
+            String[] tempStr = RecievedString.Split(' ');
             ServerLogger.LogMessage(Color.Black, Color.White, RecievedString, New_Line = true, Show_Time = true);
             ServerLogger.LogMessage(Color.Black, Color.White, "", New_Line = true, Show_Time = false);
+
+
 
             if (checkBox_EchoResponse.Checked == true)
             {
@@ -4658,6 +4679,170 @@ namespace Monitor
                 SendDataToServer(mye.ConnectionNumber, b2);
             }
 
+        }
+
+        async Task<String> SendDataETHERNET(String i_Command, bool i_OnlyCheckValidity)
+        {
+            String ret = "";
+            String[] tempStr = i_Command.Split(' ');
+
+            //Check Validity of the command first and retuen string error if something wrong. //////////////////////////////////////////////////////////////
+            //////////////////////////////////////////////////////////////
+            /////////////////////////////////////////////////////////////////
+            ///
+
+
+            int NumOfArguments = tempStr.Length;
+            if (!(NumOfArguments == 2) || tempStr[1] == "")
+            {
+                ret += String.Format("\n Arguments number should be 1, see example", NumOfArguments);
+                txtDataTx.Text = ret.ToString();
+                Button1_Click(null, null);
+                txtDataTx.Clear();
+                return ret;
+            }
+
+            byte[] buffer = StringToByteArray(tempStr[1]);
+            if (buffer == null)
+            {
+                ret += String.Format("\n Argument [{0}] invalid not hex value", tempStr[1]);
+                txtDataTx.Text = ret.ToString();
+                Button1_Click(null, null);
+                txtDataTx.Clear();
+                //   return ret;
+            }
+
+            if (i_OnlyCheckValidity == true || ret != "")
+            {
+                return ret;
+            }
+
+
+
+            // Take the second element of an array of strings called tempStr
+            // and assign it to a string variable called HexString
+            String HexString = tempStr[1];
+
+            // Convert the input string to bytes in big-endian format
+            byte[] bytes = Enumerable.Range(0, HexString.Length)
+                                     .Where(x => x % 2 == 0)
+                                     .Select(x => Convert.ToByte(HexString.Substring(x, 2), 16))
+                                     .Reverse()
+                                     .ToArray();
+
+            // Create a new byte array with the UART format: 0x55 Length [2 bytes] data [x bytes] CS [2 bytes]
+            // Calculate the length of the data until the CS (excluding prefix and CS)
+            ushort dataLength = (ushort)(bytes.Length);
+            ushort length = (ushort)(dataLength + 2);
+
+            // Create a new byte array in big-endian format
+            byte[] DataToSend = new byte[length + 3];
+            DataToSend[0] = 0x55; //preamble
+            DataToSend[1] = (byte)((dataLength >> 8) & 0xFF); //data length msb
+            DataToSend[2] = (byte)(dataLength & 0xFF); //data length lsb
+            bytes.CopyTo(DataToSend, 3);
+
+            // Calculate the CS (checksum)
+            ushort cs = CalculateCS(DataToSend);
+
+            // Convert the checksum to big-endian format
+            byte[] csBytes = BitConverter.GetBytes(cs);
+            if (BitConverter.IsLittleEndian)
+                Array.Reverse(csBytes);
+            ushort bigEndianCs = BitConverter.ToUInt16(csBytes, 0);
+
+            // Add the CS to the byte array in big-endian format
+            DataToSend[length + 3 - 1] = (byte)((bigEndianCs >> 8) & 0xFF); //CS msb
+            DataToSend[length + 3 - 2] = (byte)(bigEndianCs & 0xFF); //CS lsb
+
+
+            if (ret != null && i_OnlyCheckValidity == false)
+            {
+                txtDataTx.Text = ret.ToString();
+                //Button1_Click(null, null);
+            }
+
+            if (ret == "" && i_OnlyCheckValidity == false)
+            {
+                //Execute the command
+                //PrintToSystemLogerTxMessage(i_Command);
+                //string gotDate = ConvertByteArraytToString(DataToSend);
+                txtDataTx.Text = Ethernet_DataReceived(DataToSend);
+                Button1_Click(null, null);
+                txtDataTx.Clear();
+
+            }
+
+
+            return ret;
+
+        }
+
+       
+
+
+       private string Ethernet_DataReceived(byte[] Data)
+       { 
+          
+                int newMessageLength = Data.Length - 2; // message with priamble and length size
+                byte[] bufferWithoutChecksum = new byte[newMessageLength];
+                Array.Copy(Data, bufferWithoutChecksum, newMessageLength);
+
+                int originalBufferLength = Data.Length;
+                int checkSumLength = 2;
+                byte[] checksum = new byte[checkSumLength];
+                Array.Copy(Data, originalBufferLength - checkSumLength, checksum, 0, checkSumLength);
+                Array.Reverse(checksum);
+                ushort checksumValue = BitConverter.ToUInt16(checksum, 0); // change this if you want to worng checksum for checks GUI response     
+                byte[] ByteChecksumValue = BitConverter.GetBytes(checksumValue);
+                Array.Reverse(ByteChecksumValue);
+                string StringChecksumValue = ConvertByteArraytToString(ByteChecksumValue);
+
+                int messageLength = Data.Length - 5;
+                byte[] message = new byte[messageLength];
+                Array.Copy(Data, 3, message, 0, messageLength);
+
+                Array.Reverse(message);
+                string messageString = ConvertByteArraytToString(message);
+                messageString = messageString.Replace(" ", ""); // remove white spaces
+
+
+                string RxMessageToClientLogger = "RecvDataSerial " + messageString + "\n";
+                string correctChecksum;
+                Array.Reverse(checksum);
+
+                ushort CalcChecksumAfterRecv = CalculateCS(bufferWithoutChecksum);
+                byte[] byteCalcChecksumAfterRecv = BitConverter.GetBytes(CalcChecksumAfterRecv);
+                Array.Reverse(byteCalcChecksumAfterRecv);
+                string StringRecvChecksum = ConvertByteArraytToString(byteCalcChecksumAfterRecv);
+                bool IsCorrectChecksum = false;
+
+
+                if (IsMessageValid(bufferWithoutChecksum, checksumValue) == true)
+                {
+                    IsCorrectChecksum = true;
+                    correctChecksum = "Correct Checksum!!\nRecv checksum from sender: " + StringChecksumValue + "\nCalc massage checksum after Recv: " + StringRecvChecksum;
+                    RxMessageToClientLogger += correctChecksum;
+                }
+                else
+                {
+                    IsCorrectChecksum = false;
+                    correctChecksum = "Incorrect Checksum!!\nRecv checksum from sender: " + StringChecksumValue + "\nCalc massage checksum after Recv: " + StringRecvChecksum;
+                RxMessageToClientLogger += correctChecksum;
+                }
+            return RxMessageToClientLogger;
+
+                //SendMessageToSystemLogger(RxMessageToClientLogger, IsCorrectChecksum);
+                //string IncomingHexMessage = ConvertByteArraytToString(Data);
+
+            
+      
+            /*
+            if (checkBox_WriteFrameInformation.Checked == true)
+            {
+                WriteBufferInfo(Data);
+            }
+            */
 
         }
 
@@ -4833,6 +5018,7 @@ namespace Monitor
         //}
         private TextBox_Logger SystemLogger;
         private TextBox_Logger ServerLogger;
+        private TextBox_Logger CleaLogger;
         private TextBox_Logger SerialPortLogger;
 
         //   Logger LogIWatcher;
@@ -8721,6 +8907,7 @@ namespace Monitor
         private void Button42_Click_1(object sender, EventArgs e)
         {
             CloseClentConnection();
+            ClientSocket = null;
 
         }
 
@@ -8869,19 +9056,35 @@ namespace Monitor
         {
             try
             {
+                if (m_Server == null)
+                {
+                    WriteToSystemStatus("Server is not open", 3, Color.Orange);
+                    return;
+                }
                 
+                if (ClientSocket == null)
+                {
+                    WriteToSystemStatus("Client is not connected", 3, Color.Orange);
+                    return;
+                }
+                
+
+
                 string str = richTextBox_ClientTx.Text;
-                /*
+                
                 String[] command = str.Split(' ');
                 if (command[0].Equals("SendDataETHERNET"))
                 {
+                    
 
-                             
+
+                    /*        
                     int NumOfArguments = 2;
                     if (command.Length != 2)
                     {
                         str = String.Format("\n Arguments number should be 1, see example", NumOfArguments);
                     }
+                    */
 
                     Stream stm = ClientSocket.GetStream();
 
@@ -8893,7 +9096,7 @@ namespace Monitor
                     // Console.WriteLine("Sending...");
 
                     stm.Write(ba, 0, ba.Length);
-
+                    Task<string> task = SendDataETHERNET(str, false);
                     //WaitforBufferFull = 1;
 
                     //ClentSendData++;
@@ -8904,7 +9107,7 @@ namespace Monitor
 
                 else
                 {
-                */
+                
                     Stream stm = ClientSocket.GetStream();
 
                     ASCIIEncoding asen = new ASCIIEncoding();
@@ -8926,7 +9129,7 @@ namespace Monitor
 
 
 
-                //}
+                }
 
             }
             catch
@@ -13193,6 +13396,10 @@ This Process can take 1 minute.";
                             ret = await SendDataSerial(i_Command, i_OnlyCheckValidity);
                             break;
 
+                        case "SendDataETHERNET":
+                            ret = await SendDataETHERNET(i_Command, i_OnlyCheckValidity);
+                            break;
+                            
                         case "ReadReg32":
                             ret = ReadReg32(i_Command, i_OnlyCheckValidity);
                             break;
@@ -13796,6 +14003,30 @@ SendDataSerial 1234
 "SendDataSerial 1234");
 
             List_AllCommands.Add(SendDataSerial);
+
+
+
+            CommandClass SendDataETHERNET = new CommandClass("SendDataETHERNET",
+@"
+Description: 
+calc checksum, sends it to GUI that will check if the checksum is correct
+
+Number of arguments:
+1
+
+Syntax:
+SendDataETHERNET 
+Hex string 
+
+Example:
+
+SendDataETHERNET 1234
+    calc checksum and sends it to GUI",
+
+"SendDataETHERNET 1234");
+
+            List_AllCommands.Add(SendDataETHERNET);
+
 
 
 

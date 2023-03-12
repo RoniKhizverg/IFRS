@@ -172,9 +172,6 @@ namespace Gil_Server
                 InformationNotify("Server Started at port " + m_Port);
                 this.listenThread = new Thread(new ThreadStart(ListenForClients));
                 this.listenThread.Start();
-                
-
-
 
             }
             catch (SocketException se)
